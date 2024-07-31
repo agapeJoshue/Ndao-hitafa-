@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ndao_hitafa/components/my_chats.dart';
 import 'package:ndao_hitafa/components/my_contacte.dart';
+import 'package:ndao_hitafa/components/my_demande.dart';
 import 'package:ndao_hitafa/components/my_drawer.dart';
 import 'package:ndao_hitafa/components/my_tabs.dart';
 import 'package:ndao_hitafa/themes/light_mode.dart';
@@ -71,9 +72,8 @@ class HomePage extends StatelessWidget {
             children: [
               MyChats(),
               MyContacte(),
+              MyDemande(),
               Container(),
-              Container(),
-              /* whatsappCall(), */
             ],
           ),
           floatingActionButton: FloatingActionButton(

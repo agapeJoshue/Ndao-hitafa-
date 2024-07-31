@@ -16,6 +16,7 @@ class myColors {
   static const Color backgoundColor = Color(0xFF121B22);
   static const Color tabFocusedColor = Color(0xFF05A381);
   static const Color inLine = Color.fromARGB(255, 0, 219, 18);
+  static const Color blueColor = Color.fromARGB(255, 0, 92, 212);
 }
 
 class myIcons extends StatelessWidget {

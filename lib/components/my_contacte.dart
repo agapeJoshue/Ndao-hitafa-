@@ -28,6 +28,38 @@ class MyContacte extends StatelessWidget {
             username: "Joshué Agapé",
             email: "joshueagape@gmail.com",
             status: "",
+            colorStatus: myColors.inLine,
+          ),
+          MyFriend(
+            imgUrl:
+                "lib/images/uploads/happy-young-cute-illustration-face-profile-png.webp",
+            username: "Joshué Agapé",
+            email: "joshueagape@gmail.com",
+            status: "",
+            colorStatus: myColors.inLine,
+          ),
+          MyFriend(
+            imgUrl:
+                "lib/images/uploads/happy-young-cute-illustration-face-profile-png.webp",
+            username: "Joshué Agapé",
+            email: "joshueagape@gmail.com",
+            status: "",
+            colorStatus: Theme.of(context).colorScheme.primary,
+          ),
+          MyFriend(
+            imgUrl:
+                "lib/images/uploads/happy-young-cute-illustration-face-profile-png.webp",
+            username: "Joshué Agapé",
+            email: "joshueagape@gmail.com",
+            status: "",
+            colorStatus: Theme.of(context).colorScheme.primary,
+          ),
+          MyFriend(
+            imgUrl:
+                "lib/images/uploads/happy-young-cute-illustration-face-profile-png.webp",
+            username: "Joshué Agapé",
+            email: "joshueagape@gmail.com",
+            status: "",
             colorStatus: Theme.of(context).colorScheme.primary,
           ),
         ],
