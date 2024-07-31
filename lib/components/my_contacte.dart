@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:ndao_hitafa/components/my_friend.dart';
 import 'package:ndao_hitafa/themes/light_mode.dart';
-import 'package:ndao_hitafa/utils/host.dart';
 
 class MyContacte extends StatelessWidget {
   final int userId;

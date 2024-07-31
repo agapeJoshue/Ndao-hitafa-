@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:ndao_hitafa/components/my_demande.dart';
 
 class AjouterPage extends StatelessWidget {
-  const AjouterPage({super.key});
+  final int userId;
+  const AjouterPage({
+    super.key,
+    required this.userId,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -11,7 +15,10 @@ class AjouterPage extends StatelessWidget {
         //title: Text("Ajouter des contactes"),
         title: Text("Add new contact"),
       ),
-      body: MyDemande(label: "Ajouter",),
+      body: MyDemande(
+        label: "Ajouter",
+        userId: userId,
+      ),
     );
   }
 }

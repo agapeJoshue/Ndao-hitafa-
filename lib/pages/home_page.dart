@@ -75,7 +75,7 @@ class HomePage extends StatelessWidget {
                   MyTabs(text: "Vos contactes"),
                 ]),
           ),
-          drawer: MyDrawer(),
+          drawer: MyDrawer(userId: userId,),
           body: TabBarView(
             children: [
               MyChats(),

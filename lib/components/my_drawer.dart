@@ -4,7 +4,12 @@ import 'package:ndao_hitafa/pages/invitations.dart';
 import 'package:ndao_hitafa/pages/setting_page.dart';
 
 class MyDrawer extends StatelessWidget {
-  const MyDrawer({super.key});
+  final int userId;
+
+  const MyDrawer({
+    super.key,
+    required this.userId,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +54,7 @@ class MyDrawer extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => AjouterPage(),
+                          builder: (context) => AjouterPage(userId: userId,),
                         ),
                       );
                     },
@@ -67,7 +72,7 @@ class MyDrawer extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => Invitations(),
+                          builder: (context) => Invitations(userId: userId,),
                         ),
                       );
                     },
