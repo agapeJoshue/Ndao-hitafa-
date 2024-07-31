@@ -38,15 +38,14 @@ class LoginPage extends StatelessWidget {
         final data = jsonDecode(response.body);
 
         if (data['status'] == true) {
-          // Storer les données de l'utilisateur dans shared_preferences
           //final prefs = await SharedPreferences.getInstance();
           print(data);
-          print(data['message']);
-          print(data['userInfo']['user_id']);
-          print(data['userInfo']['username']);
-          print(data['token']);
-          print(data['userInfo']['email']);
-          print(data['userInfo']['profile_url']);
+          print(data['data']['message']);
+          print(data['data']['userInfo']['user_id']);
+          print(data['data']['userInfo']['username']);
+          print(data['data']['token']);
+          print(data['data']['userInfo']['email']);
+          print(data['data']['userInfo']['profile_url']);
 
           /* await prefs.setString('token', data['token']);
           await prefs.setString('session', jsonEncode(data['message']));
@@ -64,7 +63,7 @@ class LoginPage extends StatelessWidget {
             context: context,
             builder: (context) => AlertDialog(
               title: Text('Error'),
-              content: Text(data['message']),
+              content: Text(data['data']['message']),
               actions: <Widget>[
                 TextButton(
                   child: Text('OK'),
