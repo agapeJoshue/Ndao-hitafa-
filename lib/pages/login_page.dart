@@ -52,20 +52,16 @@ class LoginPage extends StatelessWidget {
         final data = jsonDecode(response.body);
 
         if (data['status'] == true) {
-          final prefs = await SharedPreferences.getInstance();
-          await prefs.setString('token', data['token']);
-          await prefs.setString('session', jsonEncode(data['message']));
-          await prefs.setString(
-              'user_id', jsonEncode(data['userInfo']['user_id']));
-          await prefs.setString(
-              'username', jsonEncode(data['userInfo']['username']));
-          await prefs.setString('email', jsonEncode(data['userInfo']['email']));
-          await prefs.setString(
-              'profile_url', jsonEncode(data['userInfo']['profile_url']));
-
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => HomePage()),
+            MaterialPageRoute(
+                builder: (context) => HomePage(
+                      userId: data['data']['userInfo']['user_id'],
+                      username: data['data']['userInfo']['username'],
+                      email: data['data']['userInfo']['email'],
+                      profilePath: data['data']['userInfo']['profile_url'],
+                      token: data['data']['token'],
+                    )),
           );
         } else {
           showDialog(

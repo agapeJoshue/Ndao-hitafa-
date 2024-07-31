@@ -7,8 +7,18 @@ import 'package:ndao_hitafa/pages/contacts_page.dart';
 import 'package:ndao_hitafa/themes/light_mode.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
-  void logout() {}
+  final String token, username, email, profilePath;
+  final int userId;
+  const HomePage({
+    super.key,
+    required this.userId,
+    required this.username,
+    required this.email,
+    required this.profilePath,
+    required this.token,
+  });
+
+  void logout(BuildContext context) {}
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +71,7 @@ class HomePage extends StatelessWidget {
                 labelColor: myColors.tabFocusedColor,
                 unselectedLabelColor: myColors.white.withOpacity(0.5),
                 tabs: [
-                  MyTabs(text: "Discussions"),
+                  MyTabs(text: "Discussion"),
                   MyTabs(text: "Vos contactes"),
                 ]),
           ),
@@ -69,7 +79,7 @@ class HomePage extends StatelessWidget {
           body: TabBarView(
             children: [
               MyChats(),
-              MyContacte(),
+              MyContacte(userId: userId,),
             ],
           ),
           floatingActionButton: FloatingActionButton(

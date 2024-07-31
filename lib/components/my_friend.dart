@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ndao_hitafa/themes/light_mode.dart';
 
 class MyFriend extends StatelessWidget {
+  final int userId;
   final String imgUrl, username, email, status;
   final Color colorStatus;
 
@@ -12,6 +13,7 @@ class MyFriend extends StatelessWidget {
     required this.email,
     required this.status,
     required this.colorStatus,
+    required this.userId,
   });
 
   @override

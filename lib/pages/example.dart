@@ -70,7 +70,7 @@ class SettingPage extends StatelessWidget {
         body: TabBarView(
           children: [
             MyChats(),
-            MyContacte(),
+            MyContacte(userId: 1,),
             MyDemande(label: "Ajouter",),
             Container(),
           ],
@@ -79,7 +79,7 @@ class SettingPage extends StatelessWidget {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => MyContacte()),
+              MaterialPageRoute(builder: (context) => MyContacte(userId: 1,)),
             );
           },
           child: Icon(Icons.chat),

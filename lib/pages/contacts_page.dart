@@ -11,7 +11,7 @@ class my_contacte extends StatelessWidget {
         //title: Text("Ajouter des contactes"),
         title: Text("Vos contactes"),
       ),
-      body: MyContacte(),
+      body: MyContacte(userId: 1,),
     );
   }
 }
