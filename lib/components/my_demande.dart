@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:ndao_hitafa/components/my_invitations.dart';
 
 class MyDemande extends StatelessWidget {
-  const MyDemande({super.key});
+  final String label;
+  const MyDemande({
+    super.key,
+    required this.label,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +22,24 @@ class MyDemande extends StatelessWidget {
                 "lib/images/uploads/happy-young-cute-illustration-face-profile-png.webp",
             username: "Joshué Agapé",
             email: "joshueagape@gmail.com",
-            status: "Ajouter",
+            label: label,
+            onTap: () {},
+          ),
+          MyInvitations(
+            imgUrl:
+                "lib/images/uploads/happy-young-cute-illustration-face-profile-png.webp",
+            username: "Joshué Agapé",
+            email: "joshueagape@gmail.com",
+            label: label,
+            onTap: () {},
+          ),
+          MyInvitations(
+            imgUrl:
+                "lib/images/uploads/happy-young-cute-illustration-face-profile-png.webp",
+            username: "Joshué Agapé",
+            email: "joshueagape@gmail.com",
+            label: label,
+            onTap: () {},
           ),
         ],
       ),

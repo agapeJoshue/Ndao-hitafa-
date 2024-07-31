@@ -3,14 +3,16 @@ import 'package:ndao_hitafa/components/my_button.dart';
 import 'package:ndao_hitafa/themes/light_mode.dart';
 
 class MyInvitations extends StatelessWidget {
-  final String imgUrl, username, email, status;
+  final void Function()? onTap;
+  final String imgUrl, username, email, label;
 
   const MyInvitations({
     super.key,
     required this.imgUrl,
     required this.username,
     required this.email,
-    required this.status,
+    required this.label,
+    required this.onTap,
   });
 
   @override
@@ -77,8 +79,8 @@ class MyInvitations extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.only(right: 0),
                   child: MyButton2(
-                    text: status,
-                    onTap: () {},
+                    text: label,
+                    onTap: onTap,
                   ),
                 ),
               ],

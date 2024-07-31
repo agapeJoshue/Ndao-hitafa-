@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:ndao_hitafa/components/my_chats.dart';
 import 'package:ndao_hitafa/components/my_contacte.dart';
-import 'package:ndao_hitafa/components/my_demande.dart';
 import 'package:ndao_hitafa/components/my_drawer.dart';
 import 'package:ndao_hitafa/components/my_tabs.dart';
+import 'package:ndao_hitafa/pages/contacts_page.dart';
 import 'package:ndao_hitafa/themes/light_mode.dart';
 
 class HomePage extends StatelessWidget {
@@ -13,7 +13,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-        length: 4,
+        length: 2,
         child: Scaffold(
           appBar: AppBar(
             backgroundColor: myColors.backgoundColor,
@@ -61,10 +61,8 @@ class HomePage extends StatelessWidget {
                 labelColor: myColors.tabFocusedColor,
                 unselectedLabelColor: myColors.white.withOpacity(0.5),
                 tabs: [
-                  MyTabs(text: "chats"),
-                  MyTabs(text: "contacte"),
-                  MyTabs(text: "Invitations"),
-                  MyTabs(text: "profile"),
+                  MyTabs(text: "Discussions"),
+                  MyTabs(text: "Vos contactes"),
                 ]),
           ),
           drawer: MyDrawer(),
@@ -72,15 +70,13 @@ class HomePage extends StatelessWidget {
             children: [
               MyChats(),
               MyContacte(),
-              MyDemande(),
-              Container(),
             ],
           ),
           floatingActionButton: FloatingActionButton(
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => MyContacte()),
+                MaterialPageRoute(builder: (context) => my_contacte()),
               );
             },
             child: Icon(Icons.chat),

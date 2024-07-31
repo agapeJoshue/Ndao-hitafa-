@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:ndao_hitafa/pages/ajouter_page.dart';
+import 'package:ndao_hitafa/pages/invitations.dart';
 import 'package:ndao_hitafa/pages/setting_page.dart';
 
 class MyDrawer extends StatelessWidget {
@@ -24,14 +26,50 @@ class MyDrawer extends StatelessWidget {
                   ),
                 ),
 
-                // home list title
+                // discussions list title
                 Padding(
                   padding: const EdgeInsets.only(left: 25.0),
                   child: ListTile(
-                    title: Text("H O M E"),
-                    leading: Icon(Icons.home),
+                    title: Text("D I S C U S I O N S"),
+                    leading: Icon(Icons.chat),
                     onTap: () {
                       Navigator.pop(context);
+                    },
+                  ),
+                ),
+
+                // invitations list title
+                Padding(
+                  padding: const EdgeInsets.only(left: 25.0),
+                  child: ListTile(
+                    title: Text("A J O U T E R"),
+                    leading: Icon(Icons.person_add),
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AjouterPage(),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+
+                // suggestions list title
+                Padding(
+                  padding: const EdgeInsets.only(left: 25.0),
+                  child: ListTile(
+                    title: Text("I N V I T A T I O N S"),
+                    leading: Icon(Icons.insert_invitation),
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => Invitations(),
+                        ),
+                      );
                     },
                   ),
                 ),
