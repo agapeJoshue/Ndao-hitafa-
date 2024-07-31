@@ -54,10 +54,10 @@ class LoginPage extends StatelessWidget {
           await prefs.setString('email', jsonEncode(data['userInfo']['email']));
           await prefs.setString('profile_url', jsonEncode(data['userInfo']['profile_url'])); */
 
-          /* Navigator.push(
+          Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => HomePage()),
-          ); */
+          );
         } else {
           showDialog(
             context: context,
