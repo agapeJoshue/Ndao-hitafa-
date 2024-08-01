@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ndao_hitafa/components/my_chats.dart';
 import 'package:ndao_hitafa/components/my_contacte.dart';
 import 'package:ndao_hitafa/components/my_drawer.dart';
+import 'package:ndao_hitafa/components/my_tabIcon.dart';
 import 'package:ndao_hitafa/components/my_tabs.dart';
 import 'package:ndao_hitafa/pages/contacts_page.dart';
 import 'package:ndao_hitafa/themes/light_mode.dart';
@@ -26,7 +27,7 @@ class HomePage extends StatelessWidget {
         length: 2,
         child: Scaffold(
           appBar: AppBar(
-            backgroundColor: myColors.backgoundColor,
+            backgroundColor: Color.fromARGB(255, 0, 16, 107),
             title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -66,18 +67,22 @@ class HomePage extends StatelessWidget {
               ],
             ),
             bottom: TabBar(
-                indicatorColor: myColors.tabFocusedColor,
-                indicatorWeight: 3.5,
-                labelColor: myColors.tabFocusedColor,
-                unselectedLabelColor: myColors.white.withOpacity(0.5),
-                tabs: [
-                  MyTabs(text: "Discussion"),
-                  MyTabs(text: "Vos contactes"),
-                ]),
+              indicatorColor: Color.fromARGB(255, 0, 247, 255),
+              indicatorWeight: 3.5,
+              labelColor: Color.fromARGB(255, 0, 247, 255),
+              unselectedLabelColor: myColors.white.withOpacity(0.5),
+              tabs: [
+                const MyTabicon(icon: Icon(Icons.chat_rounded)),
+                const MyTabicon(icon: Icon(Icons.people)),
+              ],
+            ),
           ),
-          drawer: MyDrawer(
+          /* drawer: MyDrawer(
             userId: userId,
-          ),
+            username: username,
+            email: email,
+            imgUrl: profilePath,
+          ), */
           body: TabBarView(
             children: [
               MyChats(userId: userId),

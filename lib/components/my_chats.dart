@@ -34,11 +34,11 @@ class MyChats extends StatelessWidget {
         future: fetchMessage(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
-            return Center(child: Text('Failed to load messages'));
+            return const Center(child: Text('Failed to load messages'));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(
+            return const Center(
                 child: Text('Votre liste de discussion s\'affiche ici'));
           } else {
             List<dynamic> messages = snapshot.data!;
@@ -53,7 +53,22 @@ class MyChats extends StatelessWidget {
                   briefChat: message['content'],
                   date: message['date'],
                   time: message['heure'],
-                  status: message['status'] ? "sent" : "received",
+                  status: message['status'],
+                  openRoom: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => Messages(
+                          userId: message['user_id'],
+                          idUserConnected: userId,
+                          emailUser: message['email'],
+                          username: message['username'],
+                          profileUrl: message['profile_url'],
+                          channelUUID: message['channel_uuid'],
+                        ),
+                        ),
+                      );
+                    },
                 );
               },
             );

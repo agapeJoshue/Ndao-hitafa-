@@ -66,7 +66,7 @@ class SettingPage extends StatelessWidget {
                 MyTabs(text: "profile"),
               ]),
         ),
-        drawer: MyDrawer(userId: 1,),
+        //drawer: MyDrawer(userId: 1,),
         body: TabBarView(
           children: [
             MyChats(userId: 1,),

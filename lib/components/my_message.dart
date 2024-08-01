@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ndao_hitafa/themes/light_mode.dart';
 
 class MyMessage extends StatelessWidget {
-  //final void Function()? openRoom;
-
+  final void Function()? openRoom;
   final String imgUrl, user, briefChat, date, time, status;
 
   const MyMessage({
@@ -14,13 +13,13 @@ class MyMessage extends StatelessWidget {
     required this.date,
     required this.time,
     required this.status,
-    //required this.openRoom,
+    required this.openRoom,
   });
 
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
-    return Padding(
+    return Padding( 
       padding: EdgeInsets.only(top: 3),
       child: Container(
         width: width,
@@ -29,7 +28,7 @@ class MyMessage extends StatelessWidget {
         child: Material(
           color: Colors.transparent,
           child: InkWell(
-            //onTap: openRoom,
+            onTap: openRoom,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -37,7 +36,7 @@ class MyMessage extends StatelessWidget {
                 Row(
                   children: [
                     Padding(
-                      padding: EdgeInsets.only(left: 10, right: 10),
+                      padding: const EdgeInsets.only(left: 10, right: 10),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(50),
                         child: Image.asset(
@@ -56,7 +55,7 @@ class MyMessage extends StatelessWidget {
                           padding: EdgeInsets.only(right: 6),
                           child: Text(
                             user,
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: Colors.black,
                               fontWeight: FontWeight.normal,
                               fontSize: 18,
@@ -64,7 +63,7 @@ class MyMessage extends StatelessWidget {
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.only(right: 6),
+                          padding: const EdgeInsets.only(right: 6),
                           child: Text(
                             briefChat,
                             style: TextStyle(
@@ -79,7 +78,7 @@ class MyMessage extends StatelessWidget {
                   ],
                 ),
                 Padding(
-                  padding: EdgeInsets.only(right: 10),
+                  padding: const EdgeInsets.only(right: 10),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -97,7 +96,7 @@ class MyMessage extends StatelessWidget {
                             fontSize: 12),
                       ),
                       Padding(
-                        padding: EdgeInsets.only(top: 4),
+                        padding: const EdgeInsets.only(top: 4),
                         child: Text(
                           status,
                           style: TextStyle(

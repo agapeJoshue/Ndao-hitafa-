@@ -38,7 +38,7 @@ class MyContacte extends StatelessWidget {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
+            return Center(child: Text("verifier votre connexion internet"));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
             return Center(child: Text('No contacts found.'));
           } else {
