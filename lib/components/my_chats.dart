@@ -5,17 +5,43 @@ import 'package:http/http.dart' as http;
 import 'package:ndao_hitafa/components/my_message.dart';
 import 'package:ndao_hitafa/pages/messages.dart';
 
-class MyChats extends StatelessWidget {
+class MyChats extends StatefulWidget {
   final int userId;
   const MyChats({
     super.key,
     required this.userId,
   });
 
-  Future<List<dynamic>> fetchMessage() async {
+  @override
+  _MyChatsState createState() => _MyChatsState();
+}
+
+class _MyChatsState extends State<MyChats> {
+  late Future<List<dynamic>> _messagesFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _messagesFuture = fetchMessages();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _refreshMessages();
+  }
+
+  Future<void> _refreshMessages() async {
+    setState(() {
+      _messagesFuture = fetchMessages();
+    });
+  }
+
+  Future<List<dynamic>> fetchMessages() async {
     try {
       final response = await http.get(
-        Uri.parse('http://192.168.56.1:7576/api/chats/list-messages/$userId'),
+        Uri.parse(
+            'http://192.168.56.1:7576/api/chats/list-messages/${widget.userId}'),
         headers: {'Content-Type': 'application/json'},
       );
       return jsonDecode(response.body);
@@ -31,7 +57,7 @@ class MyChats extends StatelessWidget {
       width: width,
       height: double.infinity,
       child: FutureBuilder<List<dynamic>>(
-        future: fetchMessage(),
+        future: _messagesFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -55,20 +81,20 @@ class MyChats extends StatelessWidget {
                   time: message['heure'],
                   status: message['status'],
                   openRoom: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => Messages(
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => Messages(
                           userId: message['user_id'],
-                          idUserConnected: userId,
+                          idUserConnected: widget.userId,
                           emailUser: message['email'],
                           username: message['username'],
                           profileUrl: message['profile_url'],
                           channelUUID: message['channel_uuid'],
                         ),
-                        ),
-                      );
-                    },
+                      ),
+                    );
+                  },
                 );
               },
             );

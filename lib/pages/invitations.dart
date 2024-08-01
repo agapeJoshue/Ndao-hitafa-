@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ndao_hitafa/components/my_demande.dart';
+import 'package:ndao_hitafa/components/MyInvitations.dart';
 
 class Invitations extends StatelessWidget {
   final int userId;
@@ -14,8 +14,7 @@ class Invitations extends StatelessWidget {
       appBar: AppBar(
         title: Text("Friend requests"),
       ),
-      body: MyDemande(
-        label: "Confirmer",
+      body: Myinvitations(
         userId: userId,
       ),
     );

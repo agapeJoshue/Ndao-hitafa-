@@ -71,7 +71,7 @@ class SettingPage extends StatelessWidget {
           children: [
             MyChats(userId: 1,),
             MyContacte(userId: 1,),
-            MyDemande(label: "Ajouter", userId: 1,),
+            MyDemande(userId: 1,),
             Container(),
           ],
         ),

@@ -72,6 +72,8 @@ class HomePage extends StatelessWidget {
               labelColor: Color.fromARGB(255, 0, 247, 255),
               unselectedLabelColor: myColors.white.withOpacity(0.5),
               tabs: [
+                /* const MyTabs(text: "Discussions"),
+                const MyTabs(text: "Contacts"), */
                 const MyTabicon(icon: Icon(Icons.chat_rounded)),
                 const MyTabicon(icon: Icon(Icons.people)),
               ],

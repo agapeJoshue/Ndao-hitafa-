@@ -16,7 +16,6 @@ class AjouterPage extends StatelessWidget {
         title: Text("Add new contact"),
       ),
       body: MyDemande(
-        label: "Ajouter",
         userId: userId,
       ),
     );

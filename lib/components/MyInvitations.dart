@@ -2,21 +2,20 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:ndao_hitafa/components/my_invitations.dart';
 
-class MyDemande extends StatefulWidget {
+class Myinvitations extends StatefulWidget {
   final int userId;
 
-  const MyDemande({
+  const Myinvitations({
     Key? key,
     required this.userId,
   }) : super(key: key);
 
   @override
-  _MyDemandeState createState() => _MyDemandeState();
+  _MyInvitationState createState() => _MyInvitationState();
 }
 
-class _MyDemandeState extends State<MyDemande> {
+class _MyInvitationState extends State<Myinvitations> {
   late Future<List<dynamic>> contactsFuture;
   Set<int> pendingInvitations = {};
 
@@ -30,7 +29,7 @@ class _MyDemandeState extends State<MyDemande> {
     try {
       final response = await http.get(
         Uri.parse(
-            'http://192.168.56.1:7576/api/users/suggestion-amis/${widget.userId}'),
+            'http://192.168.56.1:7576/api/users/lists-invitations-friend/${widget.userId}'),
         headers: {'Content-Type': 'application/json'},
       );
 
@@ -103,16 +102,12 @@ class _MyDemandeState extends State<MyDemande> {
               itemCount: snapshot.data!.length,
               itemBuilder: (context, index) {
                 var contact = snapshot.data![index];
-                bool isPending =
-                    pendingInvitations.contains(contact['user_id']);
                 return MyInvitations(
                   imgUrl: contact['profile_url'] ?? 'default_image_url',
                   username: contact['username'],
                   email: contact['email'],
-                  onTap: isPending
-                      ? () => annuler(contact['user_id'])
-                      : () => ajouter(contact['user_id']),
-                  buttonText: isPending ? 'Annuler' : 'Ajouter',
+                  onTap:  () => {},
+                  buttonText: 'Confirmer',
                 );
               },
             );
