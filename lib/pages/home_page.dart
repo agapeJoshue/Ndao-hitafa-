@@ -75,11 +75,13 @@ class HomePage extends StatelessWidget {
                   MyTabs(text: "Vos contactes"),
                 ]),
           ),
-          drawer: MyDrawer(userId: userId,),
+          drawer: MyDrawer(
+            userId: userId,
+          ),
           body: TabBarView(
             children: [
-              MyChats(),
-              MyContacte(userId: userId,),
+              MyChats(userId: userId),
+              MyContacte(userId: userId),
             ],
           ),
           floatingActionButton: FloatingActionButton(

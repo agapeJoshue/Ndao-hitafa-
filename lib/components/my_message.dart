@@ -2,16 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:ndao_hitafa/themes/light_mode.dart';
 
 class MyMessage extends StatelessWidget {
+  //final void Function()? openRoom;
+
   final String imgUrl, user, briefChat, date, time, status;
 
-  const MyMessage(
-      {super.key,
-      required this.imgUrl,
-      required this.user,
-      required this.briefChat,
-      required this.date,
-      required this.time,
-      required this.status});
+  const MyMessage({
+    super.key,
+    required this.imgUrl,
+    required this.user,
+    required this.briefChat,
+    required this.date,
+    required this.time,
+    required this.status,
+    //required this.openRoom,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +29,7 @@ class MyMessage extends StatelessWidget {
         child: Material(
           color: Colors.transparent,
           child: InkWell(
-            onTap: () {},
+            //onTap: openRoom,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,

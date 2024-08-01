@@ -69,7 +69,7 @@ class SettingPage extends StatelessWidget {
         drawer: MyDrawer(userId: 1,),
         body: TabBarView(
           children: [
-            MyChats(),
+            MyChats(userId: 1,),
             MyContacte(userId: 1,),
             MyDemande(label: "Ajouter", userId: 1,),
             Container(),
