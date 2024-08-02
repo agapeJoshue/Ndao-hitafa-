@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:ndao_hitafa/components/my_contacte.dart';
+import 'package:ndao_hitafa/components/create_neMessage.dart';
 
-class my_contacte extends StatelessWidget {
-  const my_contacte({super.key});
+class ContactsPage extends StatelessWidget {
+  final int userId;
+  const ContactsPage({
+    super.key,
+    required this.userId,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -10,7 +14,9 @@ class my_contacte extends StatelessWidget {
       appBar: AppBar(
         title: Text("Vos contactes"),
       ),
-      body: MyContacte(userId: 1,),
+      body: CreateNemessage(
+        userId: userId,
+      ),
     );
   }
 }

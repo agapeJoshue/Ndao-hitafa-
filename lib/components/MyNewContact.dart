@@ -38,7 +38,7 @@ class _MyContacteState extends State<Mynewcontact>
   Future<List<dynamic>> fetchContacts() async {
     final response = await http.get(
       Uri.parse(
-          'http://192.168.56.1:7576/api/users/contactes/${widget.userId}'),
+          'http://192.168.56.1:7576/api/users/contactes2/${widget.userId}'),
       headers: {'Content-Type': 'application/json'},
     );
 

@@ -26,11 +26,13 @@ class _MessagesState extends State<Messages> {
   final TextEditingController _messageController = TextEditingController();
   List<Message> messages = [];
   late ScrollController _scrollController;
+  late String _currentChannelUUID;
 
   @override
   void initState() {
     super.initState();
     _scrollController = ScrollController();
+    _currentChannelUUID = widget.channelUUID;
     _connectSocket();
     _fetchMessages();
   }
@@ -61,7 +63,7 @@ class _MessagesState extends State<Messages> {
 
     final message = Message(
       content: _messageController.text,
-      channelUUID: widget.channelUUID,
+      channelUUID: _currentChannelUUID,
       sender: widget.idUserConnected,
       receivedBy: widget.userId,
       isMe: true,
@@ -71,52 +73,73 @@ class _MessagesState extends State<Messages> {
       isUpdated: false,
     );
 
-    final response = await http.post(
-      Uri.parse("http://192.168.56.1:7576/api/chats/new-message"),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(message.toJson()),
-    );
+    final url = _currentChannelUUID == "initialMessage"
+        ? "http://192.168.56.1:7576/api/chats/new"
+        : "http://192.168.56.1:7576/api/chats/new-message";
 
-    if (response.statusCode == 200) {
-      setState(() {
-        messages.add(message);
-        _messageController.clear();
-        _scrollToBottom(); // Scroll vers le bas après l'ajout du message
-      });
-    } else {
-      print('Failed to send message');
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(message.toJson()),
+      );
+
+      if (response.statusCode == 200) {
+        final responseData = jsonDecode(response.body);
+
+        if (_currentChannelUUID == "initialMessage") {
+          print(responseData["channel_uuid"]);
+          setState(() {
+            _currentChannelUUID = responseData["channel_uuid"];
+          });
+          _fetchMessages();
+        }
+
+        setState(() {
+          messages.add(message);
+          _messageController.clear();
+          _scrollToBottom();
+        });
+      } else {
+        print('Failed to send message. Status code: ${response.statusCode}');
+        print('Response body: ${response.body}');
+      }
+    } catch (e) {
+      print('Error sending message: $e');
     }
   }
 
   void _handleNewMessage(dynamic data) {
     final message = Message.fromJson(data);
-    if (!messages.any((msg) =>
-        msg.date == message.date && msg.content == message.content)) {
+    if (!messages.any(
+        (msg) => msg.date == message.date && msg.content == message.content)) {
       setState(() {
         messages.add(message);
-        _scrollToBottom(); // Scroll vers le bas après la réception du message
+        _scrollToBottom();
       });
     }
   }
 
   Future<void> _fetchMessages() async {
     try {
-      final response = await http.get(
-        Uri.parse(
-            'http://192.168.56.1:7576/api/chats/list-discussions/${widget.channelUUID}/${widget.idUserConnected}'),
-        headers: {'Content-Type': 'application/json'},
-      );
+      if (_currentChannelUUID != "initialMessage") {
+        final response = await http.get(
+          Uri.parse(
+              'http://192.168.56.1:7576/api/chats/list-discussions/$_currentChannelUUID/${widget.idUserConnected}'),
+          headers: {'Content-Type': 'application/json'},
+        );
 
-      if (response.statusCode == 200) {
-        List<dynamic> data = jsonDecode(response.body);
-        setState(() {
-          messages = data.map((json) => Message.fromJson(json)).toList();
-          _scrollToBottom(); // Scroll vers le bas après le chargement des messages
-        });
-      } else {
-        throw Exception('Failed to load messages');
+        if (response.statusCode == 200) {
+          List<dynamic> data = jsonDecode(response.body);
+          setState(() {
+            messages = data.map((json) => Message.fromJson(json)).toList();
+            _scrollToBottom(); // Scroll to bottom after loading messages.
+          });
+        } else {
+          throw Exception('Failed to load messages');
+        }
       }
     } catch (e) {
       print('Error fetching messages: $e');
@@ -220,7 +243,7 @@ class _MessagesState extends State<Messages> {
 class ChatBubble extends StatelessWidget {
   final Message message;
 
-  ChatBubble({required this.message});
+  const ChatBubble({required this.message});
 
   @override
   Widget build(BuildContext context) {
@@ -284,11 +307,11 @@ class Message {
       channelUUID: json['channelUUID'] ?? '',
       sender: json['sender'] ?? 0,
       receivedBy: json['receivedBy'] ?? 0,
-      isMe: json['isMe'],
-      date: json['date'],
-      heure: json['heure'],
-      isRead: json['is_read'],
-      isUpdated: json['is_updated'],
+      isMe: json['isMe'] ?? false,
+      date: json['date'] ?? '',
+      heure: json['heure'] ?? '',
+      isRead: json['is_read'] ?? false,
+      isUpdated: json['is_updated'] ?? false,
     );
   }
 

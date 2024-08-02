@@ -95,7 +95,7 @@ class HomePage extends StatelessWidget {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => my_contacte()),
+                MaterialPageRoute(builder: (context) => ContactsPage(userId: userId)),
               );
             },
             child: Icon(Icons.chat),
