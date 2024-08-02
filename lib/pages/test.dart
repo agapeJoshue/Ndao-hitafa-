@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:web_socket_channel/io.dart';
 
 class Messages extends StatefulWidget {
@@ -23,7 +23,7 @@ class Messages extends StatefulWidget {
 }
 
 class _MessagesState extends State<Messages> {
-  late IO.Socket socket;
+  late WebSocketChannel _channel;
   final TextEditingController _messageController = TextEditingController();
   List<Message> messages = [];
   late ScrollController _scrollController;
@@ -39,24 +39,22 @@ class _MessagesState extends State<Messages> {
   }
 
   void _connectSocket() {
-    socket = IO.io('http://192.168.56.1:7576',
-        IO.OptionBuilder().setTransports(['websocket']).build());
+    _channel = IOWebSocketChannel.connect('ws://192.168.56.1:7576');
 
-    socket.on('connect', (_) {
-      print('Socket connected');
-    });
-
-    socket.on('connect_error', (error) {
-      print('Socket connection error: $error');
-    });
-
-    socket.on('disconnect', (_) {
-      print('Socket disconnected');
-    });
-
-    socket.on('receive_message_user_${widget.idUserConnected}', (data) {
-      _handleNewMessage(data);
-    });
+    _channel.stream.listen(
+      (message) {
+        final data = jsonDecode(message);
+        if (data['event'] == 'receive_message_user_${widget.idUserConnected}') {
+          _handleNewMessage(data);
+        }
+      },
+      onDone: () {
+        print('Socket disconnected');
+      },
+      onError: (error) {
+        print('Socket connection error: $error');
+      },
+    );
   }
 
   Future<void> _sendMessage() async {
@@ -162,7 +160,7 @@ class _MessagesState extends State<Messages> {
   @override
   void dispose() {
     _scrollController.dispose();
-    socket.dispose();
+    _channel.sink.close();
     super.dispose();
   }
 
