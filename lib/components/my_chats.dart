@@ -1,3 +1,4 @@
+import 'dart:async'; // Importer le package pour utiliser Timer
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -18,17 +19,29 @@ class MyChats extends StatefulWidget {
 
 class _MyChatsState extends State<MyChats> {
   late Future<List<dynamic>> _messagesFuture;
+  Timer? _timer; // Déclaration du Timer
 
   @override
   void initState() {
     super.initState();
     _messagesFuture = fetchMessages();
+
+    // Initialiser le Timer pour rafraîchir toutes les 5 secondes
+    /* _timer = Timer.periodic(const Duration(seconds: 1), (Timer t) {
+      _refreshMessages();
+    }); */
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _refreshMessages();
+    // Vous pouvez éventuellement vouloir appeler _refreshMessages ici aussi
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel(); // Annuler le Timer lorsque le widget est supprimé
+    super.dispose();
   }
 
   Future<void> _refreshMessages() async {

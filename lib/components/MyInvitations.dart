@@ -1,3 +1,4 @@
+import 'dart:async'; // Importer le package pour utiliser Timer
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -16,11 +17,29 @@ class Myinvitations extends StatefulWidget {
 
 class _MyInvitationsPageState extends State<Myinvitations> {
   late Future<List<dynamic>> contactsFuture;
+  Timer? _timer;
 
   @override
   void initState() {
     super.initState();
     contactsFuture = fetchContacts();
+
+    // Initialiser le Timer pour rafraîchir toutes les 5 secondes
+    _timer = Timer.periodic(const Duration(seconds: 1), (Timer t) {
+      _refreshContacts();
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  Future<void> _refreshContacts() async {
+    setState(() {
+      contactsFuture = fetchContacts();
+    });
   }
 
   Future<List<dynamic>> fetchContacts() async {
@@ -48,9 +67,7 @@ class _MyInvitationsPageState extends State<Myinvitations> {
             'http://192.168.56.1:7576/api/users/cancel-a-invitation/${widget.userId}/$receivedBy'),
         headers: {'Content-Type': 'application/json'},
       );
-      setState(() {
-        contactsFuture = fetchContacts();
-      });
+      _refreshContacts(); // Appeler la méthode pour rafraîchir les contacts
     } catch (e) {
       throw Exception('Failed to cancel invitation: $e');
     }
@@ -63,9 +80,7 @@ class _MyInvitationsPageState extends State<Myinvitations> {
             'http://192.168.56.1:7576/api/users/accept-a-invitation/${widget.userId}/$invitationId'),
         headers: {'Content-Type': 'application/json'},
       );
-      setState(() {
-        contactsFuture = fetchContacts();
-      });
+      _refreshContacts(); // Appeler la méthode pour rafraîchir les contacts
     } catch (e) {
       throw Exception('Failed to confirm invitation: $e');
     }

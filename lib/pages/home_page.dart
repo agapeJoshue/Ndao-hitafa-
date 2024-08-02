@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:ndao_hitafa/components/my_chats.dart';
 import 'package:ndao_hitafa/components/my_contacte.dart';
-import 'package:ndao_hitafa/components/my_drawer.dart';
+import 'package:ndao_hitafa/components/my_profile.dart';
 import 'package:ndao_hitafa/components/my_tabIcon.dart';
-import 'package:ndao_hitafa/components/my_tabs.dart';
 import 'package:ndao_hitafa/pages/contacts_page.dart';
 import 'package:ndao_hitafa/themes/light_mode.dart';
 
@@ -24,7 +23,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-        length: 2,
+        length: 3,
         child: Scaffold(
           appBar: AppBar(
             backgroundColor: Color.fromARGB(255, 0, 16, 107),
@@ -35,13 +34,14 @@ class HomePage extends StatelessWidget {
                   children: [
                     Icon(
                       Icons.wechat,
-                      color: myColors.white.withOpacity(0.5),
+                      color: myColors.white.withOpacity(0.9),
+                      size: 25,
                     ),
                     const SizedBox(width: 5),
                     Text(
                       "Ndao Hitafa",
                       style: TextStyle(
-                          color: myColors.white.withOpacity(0.5),
+                          color: myColors.white.withOpacity(0.9),
                           fontWeight: FontWeight.bold),
                     )
                   ],
@@ -76,6 +76,7 @@ class HomePage extends StatelessWidget {
                 const MyTabs(text: "Contacts"), */
                 const MyTabicon(icon: Icon(Icons.chat_rounded)),
                 const MyTabicon(icon: Icon(Icons.people)),
+                const MyTabicon(icon: Icon(Icons.person)),
               ],
             ),
           ),
@@ -89,13 +90,20 @@ class HomePage extends StatelessWidget {
             children: [
               MyChats(userId: userId),
               MyContacte(userId: userId),
+              MyProfile(
+                userId: userId,
+                username: username,
+                email: email,
+                profileUrl: profilePath,
+              ),
             ],
           ),
           floatingActionButton: FloatingActionButton(
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => ContactsPage(userId: userId)),
+                MaterialPageRoute(
+                    builder: (context) => ContactsPage(userId: userId)),
               );
             },
             child: Icon(Icons.chat),

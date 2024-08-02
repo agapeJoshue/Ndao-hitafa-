@@ -1,8 +1,8 @@
-import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:web_socket_channel/io.dart';
 
 class Messages extends StatefulWidget {
   final int userId, idUserConnected;
@@ -28,7 +28,6 @@ class _MessagesState extends State<Messages> {
   List<Message> messages = [];
   late ScrollController _scrollController;
   late String _currentChannelUUID;
-  Timer? _timer; // Ajoutez une instance de Timer
 
   @override
   void initState() {
@@ -37,9 +36,6 @@ class _MessagesState extends State<Messages> {
     _currentChannelUUID = widget.channelUUID;
     _connectSocket();
     _fetchMessages();
-    _timer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
-      _fetchMessages();
-    });
   }
 
   void _connectSocket() {
@@ -167,7 +163,6 @@ class _MessagesState extends State<Messages> {
   void dispose() {
     _scrollController.dispose();
     socket.dispose();
-    _timer?.cancel(); // Annulez le Timer
     super.dispose();
   }
 

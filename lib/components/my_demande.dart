@@ -1,8 +1,8 @@
+import 'dart:async'; // Importer le package pour utiliser Timer
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:ndao_hitafa/components/my_invitations.dart';
 import 'package:ndao_hitafa/themes/light_mode.dart';
 
 class MyDemande extends StatefulWidget {
@@ -19,12 +19,32 @@ class MyDemande extends StatefulWidget {
 
 class _MyDemandeState extends State<MyDemande> {
   late Future<List<dynamic>> contactsFuture;
-  Set<int> pendingInvitations = {};
+  Timer? _timer; // Déclaration du Timer
 
   @override
   void initState() {
     super.initState();
     contactsFuture = fetchContacts();
+
+    // Initialiser le Timer pour rafraîchir toutes les 5 secondes
+    _timer = Timer.periodic(
+      const Duration(seconds: 1),
+      (Timer t) {
+        _refreshContacts();
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  Future<void> _refreshContacts() async {
+    setState(() {
+      contactsFuture = fetchContacts();
+    });
   }
 
   Future<List<dynamic>> fetchContacts() async {
@@ -48,9 +68,7 @@ class _MyDemandeState extends State<MyDemande> {
             'http://192.168.56.1:7576/api/users/add-new-friend/${widget.userId}/$receivedBy'),
         headers: {'Content-Type': 'application/json'},
       );
-      setState(() {
-        contactsFuture = fetchContacts();
-      });
+      _refreshContacts(); // Appeler la méthode pour rafraîchir les contacts
     } catch (e) {
       throw Exception('Failed to add friend: $e');
     }
@@ -63,9 +81,7 @@ class _MyDemandeState extends State<MyDemande> {
             'http://192.168.56.1:7576/api/users/cancel-demande/${widget.userId}/$receivedBy'),
         headers: {'Content-Type': 'application/json'},
       );
-      setState(() {
-        contactsFuture = fetchContacts();
-      });
+      _refreshContacts(); // Appeler la méthode pour rafraîchir les contacts
     } catch (e) {
       throw Exception('Failed to cancel invitation: $e');
     }
