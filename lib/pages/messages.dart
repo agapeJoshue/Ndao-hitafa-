@@ -50,9 +50,13 @@ class _MessagesState extends State<Messages> {
     });
 
     socket.on('messageReceived_${widget.userId}', (data) {
-      setState(() {
-        messages.add(Message.fromJson(data));
-      });
+      final message = Message.fromJson(data);
+      if (!messages.any((msg) =>
+          msg.date == message.date && msg.content == message.content)) {
+        setState(() {
+          messages.add(message);
+        });
+      }
     });
   }
 
@@ -76,23 +80,17 @@ class _MessagesState extends State<Messages> {
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
-
-      body: jsonEncode(<String, dynamic>{
-        'content': _messageController.text,
-        'channelUUID': widget.channelUUID,
-        'sender': widget.idUserConnected.toString(),
-        'receivedBy': widget.userId.toString(),
-        'date': message.date,
-        'heure': message.heure,
-        'isRead': message.isRead,
-        'isUpdated': message.isUpdated,
-      }),
+      body: jsonEncode(message.toJson()),
     );
 
-    setState(() {
-      messages.add(message);
-      _messageController.clear();
-    });
+    if (response.statusCode == 200) {
+      setState(() {
+        messages.add(message);
+        _messageController.clear();
+      });
+    } else {
+      print('Failed to send message');
+    }
   }
 
   Future<void> _fetchMessages() async {
@@ -106,6 +104,7 @@ class _MessagesState extends State<Messages> {
       if (response.statusCode == 200) {
         List<dynamic> data = jsonDecode(response.body);
         setState(() {
+          // Réinitialisez la liste des messages avant d'ajouter les nouveaux messages
           messages = data.map((json) => Message.fromJson(json)).toList();
         });
       } else {
@@ -184,7 +183,7 @@ class _MessagesState extends State<Messages> {
                   ),
                 ),
                 IconButton(
-                  icon: Icon(Icons.send),
+                  icon: const Icon(Icons.send),
                   onPressed: _sendMessage,
                 ),
               ],
@@ -206,12 +205,12 @@ class ChatBubble extends StatelessWidget {
     return Align(
       alignment: message.isMe ? Alignment.centerRight : Alignment.centerLeft,
       child: Container(
-        margin: EdgeInsets.all(8.0),
-        padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
+        margin: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
         decoration: BoxDecoration(
           color: message.isMe
-              ? Color.fromARGB(255, 0, 102, 255)
-              : Color.fromARGB(255, 255, 255, 255),
+              ? const Color.fromARGB(255, 0, 102, 255)
+              : const Color.fromARGB(255, 255, 255, 255),
           borderRadius: BorderRadius.circular(12.0),
         ),
         child: Column(
@@ -223,16 +222,8 @@ class ChatBubble extends StatelessWidget {
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 color: message.isMe
-                    ? Color.fromARGB(255, 255, 255, 255)
-                    : Color.fromARGB(255, 0, 0, 0),
-              ),
-            ),
-            SizedBox(height: 4),
-            Text(
-              '${message.isMe ? (message.isRead ? "  Vu" : "  sent") : "last"}',
-              style: TextStyle(
-                fontSize: 12,
-                color: const Color.fromARGB(255, 219, 219, 219),
+                    ? const Color.fromARGB(255, 255, 255, 255)
+                    : const Color.fromARGB(255, 0, 0, 0),
               ),
             ),
           ],
@@ -271,11 +262,11 @@ class Message {
       channelUUID: json['channelUUID'] ?? '',
       sender: json['sender'] ?? 0,
       receivedBy: json['receivedBy'] ?? 0,
-      isMe: json['isMe'] ?? false,
-      date: json['date'] ?? '',
-      heure: json['heure'] ?? '',
-      isRead: json['is_read'] ?? false,
-      isUpdated: json['is_updated'] ?? false,
+      isMe: json['isMe'],
+      date: json['date'],
+      heure: json['heure'],
+      isRead: json['is_read'] ,
+      isUpdated: json['is_updated'],
     );
   }
 

@@ -54,13 +54,14 @@ class LoginPage extends StatelessWidget {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-                builder: (context) => HomePage(
-                      userId: data['data']['userInfo']['user_id'],
-                      username: data['data']['userInfo']['username'],
-                      email: data['data']['userInfo']['email'],
-                      profilePath: data['data']['userInfo']['profile_url'],
-                      token: data['data']['token'],
-                    )),
+              builder: (context) => HomePage(
+                userId: data['data']['userInfo']['user_id'],
+                username: data['data']['userInfo']['username'],
+                email: data['data']['userInfo']['email'],
+                profilePath: data['data']['userInfo']['profile_url'],
+                token: data['data']['token'],
+              ),
+            ),
           );
         } else {
           showDialog(

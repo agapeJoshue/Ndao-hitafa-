@@ -27,7 +27,7 @@ class _MyContacteState extends State<MyContacte>
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
     _tabController.addListener(() {
-      setState(() {}); // Trigger a rebuild when tab changes
+      setState(() {});
     });
   }
 
@@ -69,10 +69,11 @@ class _MyContacteState extends State<MyContacte>
         ),
         bottom: TabBar(
           controller: _tabController,
+          // ignore: prefer_const_literals_to_create_immutables
           tabs: [
-            Tab(text: 'Mes contacts'),
-            Tab(text: 'Invitations'),
-            Tab(text: 'Suggestions'),
+            const Tab(text: 'Mes contacts'),
+            const Tab(text: 'Invitations'),
+            const Tab(text: 'Suggestions'),
           ],
         ),
       ),
@@ -80,19 +81,25 @@ class _MyContacteState extends State<MyContacte>
         controller: _tabController,
         children: [
           // Premier onglet : Contacts
-          Container(
+          SizedBox(
             width: width,
             height: double.infinity,
             child: FutureBuilder<List<dynamic>>(
               future: fetchContacts(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator());
                 } else if (snapshot.hasError) {
-                  return Center(
-                      child: Text("Vérifiez votre connexion internet"));
+                  return const Center(
+                      child: Text(
+                    "Vérifiez votre connexion internet",
+                  ));
                 } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return Center(child: Text('Aucun contact trouvé.'));
+                  return const Center(
+                    child: Text(
+                      'Aucun contact trouvé.',
+                    ),
+                  );
                 } else {
                   return ListView.builder(
                     itemCount: snapshot.data!.length,

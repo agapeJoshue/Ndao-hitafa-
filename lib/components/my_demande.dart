@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:ndao_hitafa/components/my_invitations.dart';
+import 'package:ndao_hitafa/themes/light_mode.dart';
 
 class MyDemande extends StatefulWidget {
   final int userId;
@@ -34,7 +35,7 @@ class _MyDemandeState extends State<MyDemande> {
         headers: {'Content-Type': 'application/json'},
       );
 
-        return jsonDecode(response.body);
+      return jsonDecode(response.body);
     } catch (e) {
       throw Exception('Failed to load contacts: $e');
     }
@@ -48,7 +49,7 @@ class _MyDemandeState extends State<MyDemande> {
         headers: {'Content-Type': 'application/json'},
       );
       setState(() {
-        pendingInvitations.add(receivedBy);
+        contactsFuture = fetchContacts();
       });
     } catch (e) {
       throw Exception('Failed to add friend: $e');
@@ -59,26 +60,14 @@ class _MyDemandeState extends State<MyDemande> {
     try {
       await http.delete(
         Uri.parse(
-            'http://192.168.56.1:7576/api/users/cancel-invitation/${widget.userId}/$receivedBy'),
+            'http://192.168.56.1:7576/api/users/cancel-demande/${widget.userId}/$receivedBy'),
         headers: {'Content-Type': 'application/json'},
       );
       setState(() {
-        pendingInvitations.remove(receivedBy);
+        contactsFuture = fetchContacts();
       });
     } catch (e) {
       throw Exception('Failed to cancel invitation: $e');
-    }
-  }
-
-  Future<void> confirmer(int invitationId) async {
-    try {
-      await http.put(
-        Uri.parse(
-            'http://192.168.56.1:7576/api/users/accept-a-invitation/${widget.userId}/$invitationId'),
-        headers: {'Content-Type': 'application/json'},
-      );
-    } catch (e) {
-      throw Exception('Failed to confirm invitation: $e');
     }
   }
 
@@ -92,19 +81,18 @@ class _MyDemandeState extends State<MyDemande> {
         future: contactsFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('No contacts found'));
+            return const Center(child: Text('No contacts found'));
           } else {
             return ListView.builder(
               primary: false,
               itemCount: snapshot.data!.length,
               itemBuilder: (context, index) {
                 var contact = snapshot.data![index];
-                bool isPending =
-                    pendingInvitations.contains(contact['user_id']);
+                bool isPending = contact['invitationAlreadyExist'];
                 return MyInvitations(
                   imgUrl: contact['profile_url'] ?? 'default_image_url',
                   username: contact['username'],
@@ -155,7 +143,13 @@ class MyInvitations extends StatelessWidget {
       subtitle: Text(email),
       trailing: ElevatedButton(
         onPressed: onTap,
-        child: Text(buttonText),
+        child: Text(
+          buttonText,
+          style: TextStyle(
+              color: buttonText == "Annuler"
+                  ? Theme.of(context).colorScheme.primary
+                  : myColors.blueColor),
+        ),
       ),
     );
   }

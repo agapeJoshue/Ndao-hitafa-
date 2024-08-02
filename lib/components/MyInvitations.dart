@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -12,12 +11,11 @@ class Myinvitations extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _MyInvitationState createState() => _MyInvitationState();
+  _MyInvitationsPageState createState() => _MyInvitationsPageState();
 }
 
-class _MyInvitationState extends State<Myinvitations> {
+class _MyInvitationsPageState extends State<Myinvitations> {
   late Future<List<dynamic>> contactsFuture;
-  Set<int> pendingInvitations = {};
 
   @override
   void initState() {
@@ -33,49 +31,41 @@ class _MyInvitationState extends State<Myinvitations> {
         headers: {'Content-Type': 'application/json'},
       );
 
+      if (response.statusCode == 200) {
         return jsonDecode(response.body);
+      } else {
+        throw Exception('Failed to load contacts');
+      }
     } catch (e) {
       throw Exception('Failed to load contacts: $e');
     }
   }
 
-  Future<void> ajouter(int receivedBy) async {
-    try {
-      await http.post(
-        Uri.parse(
-            'http://192.168.56.1:7576/api/users/add-new-friend/${widget.userId}/$receivedBy'),
-        headers: {'Content-Type': 'application/json'},
-      );
-      setState(() {
-        pendingInvitations.add(receivedBy);
-      });
-    } catch (e) {
-      throw Exception('Failed to add friend: $e');
-    }
-  }
-
-  Future<void> annuler(int receivedBy) async {
+  Future<void> cancel(int receivedBy) async {
     try {
       await http.delete(
         Uri.parse(
-            'http://192.168.56.1:7576/api/users/cancel-invitation/${widget.userId}/$receivedBy'),
+            'http://192.168.56.1:7576/api/users/cancel-a-invitation/${widget.userId}/$receivedBy'),
         headers: {'Content-Type': 'application/json'},
       );
       setState(() {
-        pendingInvitations.remove(receivedBy);
+        contactsFuture = fetchContacts();
       });
     } catch (e) {
       throw Exception('Failed to cancel invitation: $e');
     }
   }
 
-  Future<void> confirmer(int invitationId) async {
+  Future<void> confirm(int invitationId) async {
     try {
       await http.put(
         Uri.parse(
             'http://192.168.56.1:7576/api/users/accept-a-invitation/${widget.userId}/$invitationId'),
         headers: {'Content-Type': 'application/json'},
       );
+      setState(() {
+        contactsFuture = fetchContacts();
+      });
     } catch (e) {
       throw Exception('Failed to confirm invitation: $e');
     }
@@ -84,30 +74,30 @@ class _MyInvitationState extends State<Myinvitations> {
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
-    return Container(
+    return SizedBox(
       width: width,
       height: double.infinity,
       child: FutureBuilder<List<dynamic>>(
         future: contactsFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('No contacts found'));
+            return const Center(child: Text('No invitations found'));
           } else {
             return ListView.builder(
               primary: false,
               itemCount: snapshot.data!.length,
               itemBuilder: (context, index) {
-                var contact = snapshot.data![index];
-                return MyInvitations(
-                  imgUrl: contact['profile_url'] ?? 'default_image_url',
-                  username: contact['username'],
-                  email: contact['email'],
-                  onTap:  () => {},
-                  buttonText: 'Confirmer',
+                var invitation = snapshot.data![index];
+                return MyInvitationTile(
+                  imgUrl: invitation['profile_url'],
+                  username: invitation['username'],
+                  email: invitation['email'],
+                  onTap: () => confirm(invitation['id']),
+                  buttonText: 'Confirm',
                 );
               },
             );
@@ -118,14 +108,14 @@ class _MyInvitationState extends State<Myinvitations> {
   }
 }
 
-class MyInvitations extends StatelessWidget {
+class MyInvitationTile extends StatelessWidget {
   final String imgUrl;
   final String username;
   final String email;
   final VoidCallback onTap;
   final String buttonText;
 
-  const MyInvitations({
+  const MyInvitationTile({
     Key? key,
     required this.imgUrl,
     required this.username,
@@ -137,17 +127,27 @@ class MyInvitations extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: ClipRRect(
-        borderRadius: BorderRadius.circular(50),
-        child: Image.asset(
-          imgUrl,
-          width: 58,
-          height: 58,
-          fit: BoxFit.cover,
+      leading: SizedBox(
+        width: 58,
+        height: 58,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(50),
+          child: Image.asset(
+            imgUrl,
+            width: 50,
+            height: 50,
+            fit: BoxFit.cover,
+          ),
         ),
       ),
-      title: Text(username),
-      subtitle: Text(email),
+      title: Text(
+        username,
+        style: const TextStyle(fontWeight: FontWeight.bold),
+      ),
+      subtitle: Text(
+        email,
+        style: const TextStyle(fontSize: 12),
+      ),
       trailing: ElevatedButton(
         onPressed: onTap,
         child: Text(buttonText),

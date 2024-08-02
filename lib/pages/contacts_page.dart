@@ -8,7 +8,6 @@ class my_contacte extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        //title: Text("Ajouter des contactes"),
         title: Text("Vos contactes"),
       ),
       body: MyContacte(userId: 1,),
