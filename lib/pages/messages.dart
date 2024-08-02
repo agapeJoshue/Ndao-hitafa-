@@ -25,10 +25,12 @@ class _MessagesState extends State<Messages> {
   late IO.Socket socket;
   final TextEditingController _messageController = TextEditingController();
   List<Message> messages = [];
+  late ScrollController _scrollController;
 
   @override
   void initState() {
     super.initState();
+    _scrollController = ScrollController();
     _connectSocket();
     _fetchMessages();
   }
@@ -50,13 +52,7 @@ class _MessagesState extends State<Messages> {
     });
 
     socket.on('messageReceived_${widget.userId}', (data) {
-      final message = Message.fromJson(data);
-      if (!messages.any((msg) =>
-          msg.date == message.date && msg.content == message.content)) {
-        setState(() {
-          messages.add(message);
-        });
-      }
+      _handleNewMessage(data);
     });
   }
 
@@ -87,9 +83,21 @@ class _MessagesState extends State<Messages> {
       setState(() {
         messages.add(message);
         _messageController.clear();
+        _scrollToBottom(); // Scroll vers le bas après l'ajout du message
       });
     } else {
       print('Failed to send message');
+    }
+  }
+
+  void _handleNewMessage(dynamic data) {
+    final message = Message.fromJson(data);
+    if (!messages.any((msg) =>
+        msg.date == message.date && msg.content == message.content)) {
+      setState(() {
+        messages.add(message);
+        _scrollToBottom(); // Scroll vers le bas après la réception du message
+      });
     }
   }
 
@@ -104,8 +112,8 @@ class _MessagesState extends State<Messages> {
       if (response.statusCode == 200) {
         List<dynamic> data = jsonDecode(response.body);
         setState(() {
-          // Réinitialisez la liste des messages avant d'ajouter les nouveaux messages
           messages = data.map((json) => Message.fromJson(json)).toList();
+          _scrollToBottom(); // Scroll vers le bas après le chargement des messages
         });
       } else {
         throw Exception('Failed to load messages');
@@ -115,8 +123,21 @@ class _MessagesState extends State<Messages> {
     }
   }
 
+  void _scrollToBottom() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_scrollController.hasClients) {
+        _scrollController.animateTo(
+          _scrollController.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      }
+    });
+  }
+
   @override
   void dispose() {
+    _scrollController.dispose();
     socket.dispose();
     super.dispose();
   }
@@ -161,6 +182,7 @@ class _MessagesState extends State<Messages> {
         children: <Widget>[
           Expanded(
             child: ListView.builder(
+              controller: _scrollController,
               itemCount: messages.length,
               itemBuilder: (context, index) {
                 return ChatBubble(message: messages[index]);
@@ -265,7 +287,7 @@ class Message {
       isMe: json['isMe'],
       date: json['date'],
       heure: json['heure'],
-      isRead: json['is_read'] ,
+      isRead: json['is_read'],
       isUpdated: json['is_updated'],
     );
   }
