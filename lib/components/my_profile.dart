@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:ndao_hitafa/pages/login_page.dart';
-import 'package:ndao_hitafa/themes/light_mode.dart'; // Assurez-vous que `myColors` est défini dans ce fichier
+import 'package:ndao_hitafa/themes/light_mode.dart';
 import 'package:http/http.dart' as http;
 
 class MyProfile extends StatelessWidget {
@@ -46,7 +46,7 @@ class MyProfile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Profil Utilisateur'),
+        title: const Text('Profil Utilisateur'),
       ),
       body: Center(
         child: Column(
@@ -117,7 +117,7 @@ class MyProfile extends StatelessWidget {
             ElevatedButton(
               onPressed: () => deleteAccount(context),
               style: ElevatedButton.styleFrom(
-                backgroundColor: Color.fromARGB(255, 255, 17, 0),
+                backgroundColor: const Color.fromARGB(255, 255, 17, 0),
                 textStyle: const TextStyle(color: Colors.white),
               ),
               child: const Text(
@@ -138,7 +138,7 @@ class MyProfile extends StatelessWidget {
                 );
               },
               style: ElevatedButton.styleFrom(backgroundColor: Colors.orange),
-              child: Text(
+              child: const Text(
                 'Déconnexion',
                 style: TextStyle(color: Colors.white),
               ),

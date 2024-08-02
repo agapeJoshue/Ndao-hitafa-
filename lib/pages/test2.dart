@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:socket_io_client/socket_io_client.dart' as IO;
-import 'package:web_socket_channel/io.dart';
 
 class Messages extends StatefulWidget {
   final int userId, idUserConnected;
